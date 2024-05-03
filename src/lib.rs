@@ -8,10 +8,12 @@ pub fn make_app() -> Router {
         .route("/2", get(handler2))
 }
 
+/// Response will be Content-Type: text/html
 async fn handler() -> Html<&'static str> {
     Html("<h1>Hello, World!</h1>")
 }
 
+/// Response will be Content-Type: text/plain
 async fn handler2() -> &'static str {
-    "<h1>Yo, World!</h1>"
+    "Yo, World!"
 }

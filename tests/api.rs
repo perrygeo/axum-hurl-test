@@ -7,11 +7,13 @@ use hurl::util::logger::LoggerOptionsBuilder;
 
 use axum_hurl_testing::make_app;
 
+// Important:
+// Without a multithreaded runtime, the tests cannot make progress
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
 async fn test_basic() {
     let app: axum::Router = make_app();
 
-    // Run the test server on a random port
+    // Run the test server on a local TCP port
     let config = TestServerConfig::builder().http_transport().build();
     let server = TestServer::new_with_config(app, config).unwrap();
     let addr = server.server_address().unwrap();
