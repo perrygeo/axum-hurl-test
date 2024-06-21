@@ -1,6 +1,9 @@
 # Testing Axum applications with Hurl
 
-[Hurl](https://hurl.dev/) is a fanstastic tool for testing HTTP services. [Axum](https://docs.rs/axum/latest/axum/) is an asynchronous Rust web server.
+[Hurl](https://hurl.dev/) is a CLI tool for testing HTTP services.
+
+[Axum](https://docs.rs/axum/latest/axum/) is an asynchronous Rust web server.
+
 Together, they are more than the sum of their parts.
 
 ## Hurl in a nutshell
