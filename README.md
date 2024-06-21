@@ -1,8 +1,14 @@
 # Testing Axum applications with Hurl
 
-[Hurl](https://hurl.dev/) is a fanstastic tool for testing HTTP services.
-You write the flow of requests and responses in a plain text format,
-and the `hurl` command runs and tests them against the live server.
+[Hurl](https://hurl.dev/) is a fanstastic tool for testing HTTP services. 
+[Axum](https://docs.rs/axum/latest/axum/) is an asynchronous Rust web server.
+Together, they are more than the sum of their parts.
+
+## Hurl in a nutshell
+
+You write the flow of HTTP requests and responses in a plain text format.
+The `hurl` command runs and tests them against a live server. It's your
+responsibility to run the server.
 
 This gives you a domain-specific language to describe
 exactly how your API should work, an **integration test at the HTTP boundary**.
@@ -17,17 +23,17 @@ HTTP 200
 header "Content-Type" contains "text/html"
 ```
 
-and run the tests...
+then run the tests...
 
 ```bash
 $ hurl --test hello.hurl
-hello.hurl: Running [1/2]
-hello.hurl: Success (6 request(s) in 245 ms)
+hello.hurl: Running [1/1]
+hello.hurl: Success (1 request(s) in 25 ms)
 --------------------------------------------------------------------------------
 Executed files:  1
 Succeeded files: 1 (100.0%)
 Failed files:    0 (0.0%)
-Duration:        261 ms
+Duration:        26 ms
 ```
 
 As a CLI, Hurl works with _any_ language that can stand up an HTTP server.
