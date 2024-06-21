@@ -1,8 +1,9 @@
 # Testing Axum applications with Hurl
 
 [Hurl](https://hurl.dev/) is a fanstastic tool for testing HTTP services.
-You specify the flow of requests and responses in a plain text format,
+You write the flow of requests and responses in a plain text format,
 and the `hurl` command runs and tests them against the live server.
+
 This gives you a domain-specific language to describe
 exactly how your API should work, an **integration test at the HTTP boundary**.
 
@@ -29,33 +30,44 @@ Failed files:    0 (0.0%)
 Duration:        261 ms
 ```
 
-## Goal
+As a CLI, Hurl works with _any_ language that can stand up an HTTP server.
+
+But hurl is implemented in Rust, and this writeup is a brief demonstration of 
+the additional benefits Rust developers can glean.
+
+
+
+## API tests
 
 > Write Hurl tests once. Run Hurl tests everywhere.
 
-As a CLI that speaks HTTP, Hurl works with any language. But writing
-web services often requires better integration with the langauge ecosystem.
+Hurl tests work at the HTTP level and are decoupled from the 
+messy technology churn of programming languages and frameworks.
+Web services often live longer than the trendy technology that created them.
+When the tests that define your core business logic get tied to those trendy technologies, 
+you're trapped! You've got no way to move to a different solution
+without breaking things, thus confidence wavers.
 
-In a Rust application, I'd like to be able to:
+By using hurl to capture the _actual_
+behavior of your API, you're free to change implementation details.
+In other words, hurl helps you rewrite it in Rust :-)
+Or in any other language/technique/hosting service for that matter.
 
-- run `cargo test` and have the application server spun up automatically.
-- run `cargo fuzz` to test the domain of input variables _at the API level_.
-- run `cargo llvm-cov` to evaluate code coverage of the API tests.
-- run `cargo flamegraph` to profile for hot spots.
-- run `cargo bench` to gather timings and compare with `criterion`.
-- run `cargo run --bin my_hurl_runner http://staging.example.com` to send traffic to an arbitrary host.
+But language is of particular importance here, because Hurl is implemented in Rust.
+By integrating at the API level, using the hurl crates to get at timing information,
+variable injection, etc. we have a solid integration testing toolkit.
 
-The Hurl tests can express the HTTP logic for all cases.
-Thankfully, Hurl is also implemented in Rust and publishes a library so we can use it in our test suite.
-So we can aim to maximally leverage the Hurl tests, reusing them
+The aim is to maximally leverage the Hurl tests, reusing them
 beyond just ad-hoc CLI testing. They can be used for integration tests, fuzz testing,
 profiling, coverage, benchmarking, and live QA testing.
 
-This repo contains an axum web server, a set of hurl tests, and the
-Rust "scaffolding" to run the Hurl tests in these scenarios. In each case,
-all the HTTP business logic is defered to the Hurl tests.
+In my Rust application, I'd like to be able to:
 
-I'm not proposing them as your _only_ form of testing, but Hurl API tests integrated
-with Rust test tooling does provide a lot of "bang for the buck".
-It tests at the public API boundary which is ultimately the contract that matters if you're publishing
-a web site.
+- run `cargo test` and have a test application server spun up automatically, then send hurl traffic at it.
+- run `cargo llvm-cov` to evaluate code coverage of the hurl tests.
+- run `cargo run --bin hurl-traffic http://staging.example.com` to send the same traffic to an arbitrary host.
+
+This repo contains an Axum web server, a set of hurl tests, and the
+Rust "scaffolding" to run the Hurl tests in these scenarios. I'm not proposing them as your _only_
+form of testing. But hurl-based API tests (integration tests, whatever you want to call them)
+provide a lot of "bang for the buck".

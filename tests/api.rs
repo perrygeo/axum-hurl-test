@@ -10,7 +10,7 @@ use axum_hurl_testing::make_app;
 // Important:
 // Without a multithreaded runtime, the tests cannot make progress
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
-async fn test_basic() {
+async fn test_api() {
     let app: axum::Router = make_app();
 
     // Run the test server on a local TCP port
@@ -20,7 +20,7 @@ async fn test_basic() {
     let baseurl = addr.as_str().strip_suffix('/').unwrap();
 
     // Read hurl file
-    let content = std::fs::read_to_string("./tests/api/basic.hurl").unwrap();
+    let content = std::fs::read_to_string("./tests/api.hurl").unwrap();
 
     // Set the baseurl variable
     let mut variables = HashMap::default();
