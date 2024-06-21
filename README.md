@@ -48,7 +48,7 @@ the additional benefits Rust developers can gain from adopting hurl.
 Hurl tests work at the HTTP level and are decoupled from the 
 messy technology churn of programming languages and frameworks.
 Web services often live longer than the trendy technology that created them.
-When the tests that define your core business logic get tied to those trendy technologies, 
+When the tests that define your core business logic get tied to those systems, 
 you're trapped! You've got no way to move to a different solution
 without breaking things, thus confidence wavers.
 
@@ -65,11 +65,54 @@ The aim is to maximally leverage the Hurl tests, reusing them
 beyond just ad-hoc CLI testing. They can be used for integration tests, fuzz testing,
 profiling, coverage, benchmarking, and live QA testing.
 
-In my Rust application, I'd like to be able to:
+## Examples
 
-- run `cargo test` and have a test application server spun up automatically, then send hurl traffic at it.
-- run `cargo llvm-cov` to evaluate code coverage of the hurl tests.
-- run `cargo run --bin hurl-traffic http://staging.example.com` to send the same traffic to an arbitrary host.
+Spin up the test server then hurl traffic at it.
+
+```shell
+$ cargo test --test api
+    Finished test [unoptimized + debuginfo] target(s) in 0.06s
+     Running tests/api.rs (target/debug/deps/api-a7d87431c0d4249a)
+
+running 1 test
+test test_api ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
+Evaluate code coverage of the hurl tests.
+
+```
+$ cargo llvm-cov --ignore-filename-regex bin --test api
+   Compiling axum-hurl-testing v0.1.0 (/home/user/projects/axum-hurl-test)
+    Finished test [unoptimized + debuginfo] target(s) in 4.24s
+     Running tests/api.rs (target/llvm-cov-target/debug/deps/api-a7d87431c0d4249a)
+
+running 1 test
+test test_api ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+Filename                                            Regions    Missed Regions     Cover   Functions  Missed Functions  Executed       Lines      Missed Lines     Cover    Branches   Missed Branches     Cover
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+/home/user/projects/axum-hurl-test/src/lib.rs             5                 2    60.00%           5                 2    60.00%          13                 4    69.23%           0                 0         -
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+TOTAL                                                     5                 2    60.00%           5                 2    60.00%          13                 4    69.23%           0                 0         -
+```
+
+To send the same traffic to an arbitrary host.
+
+```
+$ cargo run --bin hurl-traffic http://localhost:3000
+    Finished dev [unoptimized + debuginfo] target(s) in 0.06s
+     Running `target/debug/hurl-traffic 'http://localhost:3000'`
+----
+Running Hurl tests './tests/api.hurl' against 'http://localhost:3000'
+time: 13 ms
+n requests: 2
+n asserts: 6
+success: true
+```
 
 This repo contains an Axum web server, a hurl test file, and the
 Rust scaffolding to run the Hurl tests in these scenarios.
