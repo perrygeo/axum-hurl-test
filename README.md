@@ -7,14 +7,14 @@ and the `hurl` command runs and tests them against the live server.
 This gives you a domain-specific language to describe
 exactly how your API should work, an **integration test at the HTTP boundary**.
 
-For example, to assert that you're getting a JSON response with RUNNING status...
+For example, to test that you're getting a `text/html` response with a 200 status,
+create a file `hello.hurl`
 
 ```hurl
-GET https://example.org/api/tests/4567
+GET https://example.org/
 HTTP 200
 [Asserts]
-header "Content-Type" == "application/json"
-jsonpath "$.status" == "RUNNING"
+header "Content-Type" contains "text/html"
 ```
 
 and run the tests...
@@ -32,9 +32,8 @@ Duration:        261 ms
 
 As a CLI, Hurl works with _any_ language that can stand up an HTTP server.
 
-But hurl is implemented in Rust, and this writeup is a brief demonstration of 
-the additional benefits Rust developers can glean.
-
+But hurl is implemented in Rust, and this write-up is a brief demonstration of 
+the additional benefits Rust developers can gain from adopting hurl.
 
 
 ## API tests
@@ -68,6 +67,7 @@ In my Rust application, I'd like to be able to:
 - run `cargo run --bin hurl-traffic http://staging.example.com` to send the same traffic to an arbitrary host.
 
 This repo contains an Axum web server, a set of hurl tests, and the
-Rust "scaffolding" to run the Hurl tests in these scenarios. I'm not proposing them as your _only_
-form of testing. But hurl-based API tests (integration tests, whatever you want to call them)
-provide a lot of "bang for the buck".
+Rust scaffolding to run the Hurl tests in these scenarios. I'm not proposing them as your _only_
+form of testing. But hurl-based API tests 
+(traffic tests, integration tests, whatever you want to label them)
+provide a lot of bang for the buck, in the Rust context particularly.
